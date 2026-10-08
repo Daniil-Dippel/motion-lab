@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0d12" />
+  <title>Motion Lab — тренажёр анимации</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">MOTION DESIGN CLASS</div>
+        <h1>Motion Lab</h1>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="ghost-btn" id="randomChallengeBtn" type="button">🎯 Задание</button>
+        <button class="primary-btn" id="playBtnTop" type="button">▶ Запустить</button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="stage-card">
+        <div class="stage-toolbar">
+          <div class="segmented" id="objectSelector" aria-label="Выбор объекта">
+            <button type="button" data-object="square" class="active">Квадрат</button>
+            <button type="button" data-object="circle">Круг</button>
+            <button type="button" data-object="triangle">Треугольник</button>
+            <button type="button" data-object="text">Текст</button>
+          </div>
+
+          <button class="icon-btn" id="resetBtn" title="Сбросить" type="button">↺</button>
+        </div>
+
+        <div class="stage-wrap">
+          <div id="stage" class="stage">
+            <div class="stage-grid"></div>
+            <div id="motionObject" class="motion-object square" aria-label="Анимируемый объект"></div>
+          </div>
+
+          <div class="timeline-mini">
+            <div class="timeline-track">
+              <div class="timeline-progress" id="timelineProgress"></div>
+            </div>
+            <div class="timeline-meta">
+              <span id="timeLabel">0.00 / 1.00 сек</span>
+              <span id="stateHint">Старт → Финиш</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stage-actions">
+          <button class="primary-btn big" id="playBtn" type="button">▶ Запустить анимацию</button>
+          <button class="secondary-btn" id="pauseBtn" type="button">⏸ Пауза</button>
+          <button class="secondary-btn" id="replayBtn" type="button">↻ Повтор</button>
+        </div>
+      </section>
+
+      <aside class="controls-card">
+        <section class="control-section">
+          <div class="section-head">
+            <div>
+              <span class="section-kicker">1. ОБЪЕКТ</span>
+              <h2>Что анимируем</h2>
+            </div>
+          </div>
+
+          <div class="field-grid compact">
+            <label class="field">
+              <span>Цвет объекта</span>
+              <input type="color" id="objectColor" value="#7c5cff" />
+            </label>
+
+            <label class="field">
+              <span>Цвет сцены</span>
+              <input type="color" id="stageColor" value="#131722" />
+            </label>
+          </div>
+
+          <div id="textControls" class="text-controls hidden">
+            <label class="field full">
+              <span>Текст</span>
+              <input id="textValue" type="text" maxlength="28" value="MOTION" placeholder="Например: MOTION" />
+            </label>
+
+            <label class="range-field">
+              <div class="range-head">
+                <span>Размер текста</span>
+                <output id="fontSizeOut">48 px</output>
+              </div>
+              <input id="fontSize" type="range" min="18" max="92" value="48" />
+            </label>
+          </div>
+        </section>
+
+        <section class="control-section">
+          <div class="section-head inline">
+            <div>
+              <span class="section-kicker">2. ПОЗИЦИЯ</span>
+              <h2>Начало и конец</h2>
+            </div>
+
+            <div class="state-switch" id="stateSwitch">
+              <button class="active" type="button" data-state="start">Старт</button>
+              <button type="button" data-state="end">Финиш</button>
+            </div>
+          </div>
+
+          <div class="range-list">
+            <label class="range-field">
+              <div class="range-head">
+                <span>X</span>
+                <output id="xOut">0 px</output>
+              </div>
+              <input id="xRange" type="range" min="-130" max="130" value="0" />
+            </label>
+
+            <label class="range-field">
+              <div class="range-head">
+                <span>Y</span>
+                <output id="yOut">0 px</output>
+              </div>
+              <input id="yRange" type="range" min="-150" max="150" value="0" />
+            </label>
+
+            <label class="range-field">
+              <div class="range-head">
+                <span>Масштаб</span>
+                <output id="scaleOut">100%</output>
+              </div>
+              <input id="scaleRange" type="range" min="10" max="220" value="100" />
+            </label>
+
+            <label class="range-field">
+              <div class="range-head">
+                <span>Поворот</span>
+                <output id="rotateOut">0°</output>
+              </div>
+              <input id="rotateRange" type="range" min="-360" max="360" value="0" />
+            </label>
+
+            <label class="range-field">
+              <div class="range-head">
+                <span>Прозрачность</span>
+                <output id="opacityOut">100%</output>
+              </div>
+              <input id="opacityRange" type="range" min="0" max="100" value="100" />
+            </label>
+          </div>
+        </section>
+
+        <section class="control-section">
+          <div class="section-head">
+            <div>
+              <span class="section-kicker">3. ДВИЖЕНИЕ</span>
+              <h2>Характер анимации</h2>
+            </div>
+          </div>
+
+          <div class="field-grid">
+            <label class="field">
+              <span>Длительность</span>
+              <select id="durationSelect">
+                <option value="300">0.3 сек</option>
+                <option value="500">0.5 сек</option>
+                <option value="800">0.8 сек</option>
+                <option value="1000" selected>1.0 сек</option>
+                <option value="1500">1.5 сек</option>
+                <option value="2000">2.0 сек</option>
+                <option value="3000">3.0 сек</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Easing</span>
+              <select id="easingSelect">
+                <option value="linear">Linear</option>
+                <option value="ease">Ease</option>
+                <option value="ease-in">Ease In</option>
+                <option value="ease-out" selected>Ease Out</option>
+                <option value="ease-in-out">Ease In Out</option>
+                <option value="cubic-bezier(0.34,1.56,0.64,1)">Overshoot</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="toggle-row">
+            <label class="toggle">
+              <input id="loopToggle" type="checkbox" />
+              <span class="toggle-ui"></span>
+              <span>Зациклить</span>
+            </label>
+
+            <label class="toggle">
+              <input id="alternateToggle" type="checkbox" />
+              <span class="toggle-ui"></span>
+              <span>Туда-обратно</span>
+            </label>
+          </div>
+        </section>
+
+        <section class="control-section">
+          <div class="section-head">
+            <div>
+              <span class="section-kicker">4. БЫСТРЫЕ ИДЕИ</span>
+              <h2>Пресеты</h2>
+            </div>
+          </div>
+
+          <div class="preset-grid">
+            <button type="button" data-preset="pop">Pop</button>
+            <button type="button" data-preset="slide">Slide</button>
+            <button type="button" data-preset="spin">Spin</button>
+            <button type="button" data-preset="drop">Drop</button>
+            <button type="button" data-preset="fade">Fade</button>
+            <button type="button" data-preset="impact">Impact</button>
+          </div>
+        </section>
+
+        <section class="control-section challenge-section">
+          <div class="section-head">
+            <div>
+              <span class="section-kicker">СОРЕВНОВАНИЕ</span>
+              <h2>Мини-челлендж</h2>
+            </div>
+          </div>
+
+          <div class="challenge-card" id="challengeCard">
+            <div class="challenge-badge">Задание</div>
+            <p id="challengeText">Сделай появление фигуры так, чтобы она выглядела уверенно и тяжело.</p>
+            <div class="challenge-rules" id="challengeRules">Только Scale + Y • до 1 секунды</div>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <footer class="footer">
+      <span>Motion Lab • HTML + CSS + JavaScript • работает офлайн</span>
+      <span>Совет: сначала настрой «Старт», потом «Финиш».</span>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
